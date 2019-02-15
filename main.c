@@ -1,3 +1,4 @@
+/*Author: Gintautas Plonis*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "deque.h"
@@ -6,7 +7,8 @@
 
 int main()
 {
-    node *deque = NULL;
+    Deque *deque = NULL;
+
     int operandOne = 0;
     int operandTwo = 0;
 
@@ -37,6 +39,7 @@ int main()
     printf("isEmpty(&deque): %d\n\n", isEmpty(&deque));
 
     dequeDestroy(&deque);
+    printf("isEmpty(&deque): %d\n\n", isEmpty(&deque));
 
     return 0;
 }

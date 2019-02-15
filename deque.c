@@ -1,55 +1,34 @@
+/*Author: Gintautas Plonis*/
 #include <stdlib.h>
 #include <stdio.h>
 #include "deque.h"
-#include "node.h"
 
-void dequeCreate(node **deque)
+void dequeCreate(Deque **deque)
 {
-    *deque = (node *) malloc(sizeof(node));
-    (*deque)->data = 0;
+    *deque = (Deque *) malloc(sizeof(Deque));
+    (*deque)->size = 0;
     (*deque)->next = NULL;
 }
 
-void dequePrint(node **head)
+void dequePrint(Deque **deque)
 {
-    node *firstNode = *head;
-    if (*head != NULL)
+    node *current = (*deque)->next;
+    while (current != NULL)
     {
-        *head = (*head)->next;
-
-        while (*head != NULL)
-        {
-            printf("%d ", (*head)->data);
-            *head = (*head)->next;
-        }
-
-        *head = firstNode;
+        printf("%d ", current->data);
+        current = current->next;
     }
 }
 
-int isEmpty(node **head)
+int isEmpty(Deque **deque)
 {
-    int count = 0;
-    node *firstNode = *head;
-
-    if (*head != NULL)
-    {
-        while (*head != NULL)
-        {
-            count++;
-            *head = (*head)->next;
-        }
-
-        *head = firstNode;
-    }
-
-    return count == 1;
+    return ((*deque)->size == 0 && deque != NULL);
 }
 
-int dequeDestroy(node **head)
+int dequeDestroy(Deque **deque)
 {
-    node *current = *head;
-    node *next;
+    node *current = (*deque)->next;
+    node *next = NULL;
 
     while (current != NULL)
     {
@@ -58,94 +37,106 @@ int dequeDestroy(node **head)
         current = next;
     }
 
-    *head = NULL;
+    free(deque);
+    (*deque)->size = 0;
 
     return 0;
 }
 
-int pushEnd(node **deque, int data)
+int pushEnd(Deque **deque, int data)
 {
     node *newNode = NULL;
     node *lastDeque = NULL;
-    node *firstNode = NULL;
-    lastDeque = (node *) malloc(sizeof(node));
+    node *current = NULL;
+
     newNode = (node *) malloc(sizeof(node));
 
     newNode->data = data;
     newNode->next = NULL;
-    firstNode = *deque;
+    current = (*deque)->next;
 
-    while (*deque != NULL)
+    if (isEmpty(deque))
     {
-        lastDeque = *deque;
-        *deque = (*deque)->next;
+        (*deque)->next = newNode;
+    } else
+    {
+        while (current != NULL)
+        {
+            lastDeque = current;
+            current = current->next;
+        }
+
+        lastDeque->next = newNode;
     }
 
-    lastDeque->next = newNode;
-    *deque = firstNode;
+    (*deque)->size++;
 
     return 0;
 }
 
-int pushStart(node **deque, int data)
+int pushStart(Deque **deque, int data)
 {
     node *newNode = NULL;
     newNode = (node *) malloc(sizeof(node));
 
     newNode->data = data;
     newNode->next = (*deque)->next;
+
     (*deque)->next = newNode;
+    (*deque)->size++;
 
     return 0;
 }
 
-int popEnd(node **deque, int *operand)
+int popEnd(Deque **deque, int *operand)
 {
-    node *first = *deque;
     node *secondLast = NULL;
+    node *current = NULL;
+
+    current = (*deque)->next;
 
     if (isEmpty(deque))
         return -1;
 
-    while ((*deque)->next != NULL)
+    if (current->next != NULL)
     {
+        while (current->next != NULL)
+        {
+            *operand = current->next->data;
+            secondLast = current;
+            current = current->next;
+        }
+    } else
+    {
+        secondLast = (*deque)->next;
         *operand = (*deque)->next->data;
-        secondLast = *deque;
-        *deque = (*deque)->next;
+        (*deque)->next = NULL;
     }
 
-    free(*deque);
+    free(secondLast->next);
     secondLast->next = NULL;
-    *deque = first;
+    (*deque)->size--;
 
     return 0;
 }
 
-int popStart(node **deque, int *operand)
+int popStart(Deque **deque, int *operand)
 {
-    node *second = NULL;
+    node *temp = NULL;
+
     if (isEmpty(deque))
         return -1;
 
     *operand = (*deque)->next->data;
-    second = (*deque)->next;
+    temp = (*deque)->next;
     (*deque)->next = (*deque)->next->next;
-    free(second);
+    free(temp);
+    (*deque)->size--;
 
     return 0;
 }
 
-int dequeCount(node **deque)
+int dequeCount(Deque **deque)
 {
-    node *first = *deque;
-    int count = -1;
-    while (*deque != NULL)
-    {
-        count++;
-        *deque = (*deque)->next;
-    }
-
-    *deque = first;
-
-    return count;
+    return (*deque)->size;
 }

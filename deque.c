@@ -12,21 +12,30 @@ void dequeCreate(Deque **deque)
 
 void dequePrint(Deque **deque)
 {
-    node *current = (*deque)->next;
-    while (current != NULL)
+    if (*deque != NULL)
     {
-        printf("%d ", current->data);
-        current = current->next;
+        node *current = (*deque)->next;
+        while (current != NULL)
+        {
+            printf("%d ", current->data);
+            current = current->next;
+        }
     }
 }
 
 int isEmpty(Deque **deque)
 {
-    return ((*deque)->size == 0 && deque != NULL);
+    if (*deque == NULL)
+        return -1;
+
+    return ((*deque)->size == 0);
 }
 
 int dequeDestroy(Deque **deque)
 {
+    if (*deque == NULL)
+        return -1;
+
     node *current = (*deque)->next;
     node *next = NULL;
 
@@ -45,6 +54,9 @@ int dequeDestroy(Deque **deque)
 
 int pushEnd(Deque **deque, int data)
 {
+    if (*deque == NULL)
+        return -1;
+
     node *newNode = NULL;
     node *lastDeque = NULL;
     node *current = NULL;
@@ -76,6 +88,9 @@ int pushEnd(Deque **deque, int data)
 
 int pushStart(Deque **deque, int data)
 {
+    if (*deque == NULL)
+        return -1;
+
     node *newNode = NULL;
     newNode = (node *) malloc(sizeof(node));
 
@@ -90,6 +105,9 @@ int pushStart(Deque **deque, int data)
 
 int popEnd(Deque **deque, int *operand)
 {
+    if (*deque == NULL)
+        return -1;
+
     node *secondLast = NULL;
     node *current = NULL;
 
@@ -122,6 +140,9 @@ int popEnd(Deque **deque, int *operand)
 
 int popStart(Deque **deque, int *operand)
 {
+    if (*deque == NULL)
+        return -1;
+
     node *temp = NULL;
 
     if (isEmpty(deque))
@@ -138,5 +159,8 @@ int popStart(Deque **deque, int *operand)
 
 int dequeCount(Deque **deque)
 {
+    if (*deque == NULL)
+        return -1;
+
     return (*deque)->size;
 }
